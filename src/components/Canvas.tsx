@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Canvas as FabricCanvas, IText, Circle, Rect, Line } from 'fabric';
 import { useSpring, animated } from 'react-spring';
@@ -51,9 +50,11 @@ export const Canvas: React.FC = () => {
       selection: activeTool === 'select'
     });
 
-    // Configurar brush para desenho
-    canvas.freeDrawingBrush.color = '#2563eb';
-    canvas.freeDrawingBrush.width = 3;
+    // Configurar brush para desenho - verificar se existe primeiro
+    if (canvas.freeDrawingBrush) {
+      canvas.freeDrawingBrush.color = '#2563eb';
+      canvas.freeDrawingBrush.width = 3;
+    }
 
     setFabricCanvas(canvas);
 
@@ -76,7 +77,10 @@ export const Canvas: React.FC = () => {
     fabricCanvas.isDrawingMode = activeTool === 'pen';
     fabricCanvas.selection = activeTool === 'select';
     
-    if (activeTool === 'pen') {
+    // Configurar brush apenas se estiver em modo desenho e o brush existir
+    if (activeTool === 'pen' && fabricCanvas.freeDrawingBrush) {
+      fabricCanvas.freeDrawingBrush.color = '#2563eb';
+      fabricCanvas.freeDrawingBrush.width = 3;
       fabricCanvas.defaultCursor = 'crosshair';
     } else {
       fabricCanvas.defaultCursor = 'default';
